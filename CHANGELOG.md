@@ -3,6 +3,15 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.4.0] - 2026-10-11
+
+- Wraps ekbasis [v0.1.20](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.20) (`209353139a23aa3682bd83513415abb732dec338`).
+- Code probes: a key collision, a NOT NULL left empty, or rows still referenced by a foreign key are checked on a copy
+  of the scratch database; when PostgreSQL reproduces the error with real rows, the verdict is "fails".
+- Edited migrations now get a verdict (on the base schema before them).
+- New input `setup-sql`: SQL run by the scratch admin before the base's migrations (read from the base branch, never
+  from the pull request).
+
 ## [1.3.0] - 2026-10-11
 
 - Wraps ekbasis [v0.1.19](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.19) (`9caf2b222e048a1c5b4279ac643feb068029212a`).

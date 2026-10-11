@@ -64,6 +64,9 @@ inputs:
   on-code:
     description: "django/alembic: a migration with code that is not SQL (RunPython, no offline SQL) is listed as 'code not foreseen, review by hand' and does not fail the check (warn, default), or fails closed (block)."
     default: warn
+  setup-sql:
+    description: "Path of a SQL file run before the base's migrations by the scratch server's admin (superuser) connection: schemas, roles or extensions your platform creates outside the migrations (e.g. Supabase's auth schema). :guard_role names the role the migrations run as. SECURITY: read from the BASE branch (git show <base>:<path>), never from the pull request, because it runs with privileges; a pull request that changes it takes effect only after it is merged."
+    default: ""
   postgres-image:
     description: The scratch PostgreSQL the schema is built in.
     default: postgres:16
@@ -88,8 +91,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.19
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@9caf2b222e048a1c5b4279ac643feb068029212a
+      # ekbasis v0.1.20
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@209353139a23aa3682bd83513415abb732dec338
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
@@ -104,6 +107,7 @@ runs:
         postgres-image: ${{ inputs.postgres-image }}
         github-token: ${{ inputs.github-token }}
         verdict-cache: ${{ inputs.verdict-cache }}
+        setup-sql: ${{ inputs.setup-sql }}
         framework: ${{ inputs.framework }}
         image: ${{ inputs.image }}
         setup: ${{ inputs.setup }}
