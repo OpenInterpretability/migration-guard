@@ -1,0 +1,76 @@
+name: Ekbasis Migration Guard
+description: Foresee whether a pull request's PostgreSQL migrations lose data or fail on the existing database.
+author: OpenInterpretability
+branding:
+  icon: shield
+  color: blue
+
+# This action is a thin wrapper. The steps live in OpenInterpretability/ekbasis (actions/migration-guard) and are
+# pinned below by full commit SHA, not by tag: a tag can be moved, a commit cannot. The pin is the release
+# EKBASIS_TAG in .github/ekbasis-pin; the release workflow refuses a tag whose pin and SHA disagree.
+
+inputs:
+  api-key:
+    description: Ekbasis API key (ekb_...). Pass it from a secret. A self-hosted server without keys accepts any value.
+    required: true
+  api-url:
+    description: Ekbasis server (default, the hosted API; or your own server with the open weights).
+    default: https://openinterp.org/api/v1
+  base-ref:
+    description: The branch the pull request merges into (default, the pull request's base).
+    default: ""
+  paths:
+    description: Which files are migrations, one fnmatch glob per line (default, Prisma, Diesel, *.up.sql and *migrations/*.sql).
+    default: ""
+  lost-threshold:
+    description: Risky when P(data lost) reaches this.
+    default: "0.5"
+  fail-threshold:
+    description: Risky when P(a statement fails) reaches this.
+    default: "0.5"
+  autocommit:
+    description: "true: statements commit one by one (psql -f). Default: one transaction per file, as Prisma, Diesel and golang-migrate run it."
+    default: "false"
+  mode:
+    description: "comment (one PR comment, updated on each push), check (the job fails when risky), or both."
+    default: both
+  fail-on:
+    description: "risky (fail on risky and on cannot foresee) or never."
+    default: risky
+  db-stats-url:
+    description: Optional read-only replica URL, from a secret. Only planner statistics are read (row estimates, NULL fractions, distinct counts), never values.
+    default: ""
+  postgres-image:
+    description: The scratch PostgreSQL the schema is built in.
+    default: postgres:16
+  github-token:
+    description: Token used to write the comment (needs pull-requests write).
+    default: ${{ github.token }}
+
+outputs:
+  verdict:
+    description: ok, risky or cannot-foresee.
+    value: ${{ steps.guard.outputs.verdict }}
+  result:
+    description: Path of the JSON result.
+    value: ${{ steps.guard.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+    - id: guard
+      # ekbasis v0.1.12
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@81f76d62e832481acccec3f68d39f7e8e3a9e3ad
+      with:
+        api-key: ${{ inputs.api-key }}
+        api-url: ${{ inputs.api-url }}
+        base-ref: ${{ inputs.base-ref }}
+        paths: ${{ inputs.paths }}
+        lost-threshold: ${{ inputs.lost-threshold }}
+        fail-threshold: ${{ inputs.fail-threshold }}
+        autocommit: ${{ inputs.autocommit }}
+        mode: ${{ inputs.mode }}
+        fail-on: ${{ inputs.fail-on }}
+        db-stats-url: ${{ inputs.db-stats-url }}
+        postgres-image: ${{ inputs.postgres-image }}
+        github-token: ${{ inputs.github-token }}
