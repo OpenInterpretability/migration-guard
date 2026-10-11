@@ -3,6 +3,13 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.5.0] - 2026-10-11
+
+- Wraps ekbasis [v0.1.21](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.21) (`034a95dddb2f1886ef9f570dbba2d6f726e81f39`).
+- `framework: rails` is supported (opt-in; no longer behind an experimental switch).
+- New input `redis` (`auto`, `on`, `off`): a throwaway Redis on the generator's isolated network for projects whose
+  migrations need it.
+
 ## [1.4.0] - 2026-10-11
 
 - Wraps ekbasis [v0.1.20](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.20) (`209353139a23aa3682bd83513415abb732dec338`).

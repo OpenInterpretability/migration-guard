@@ -12,7 +12,7 @@ Pre-registered evaluation on **184 migrations the model never saw**:
 | Recall on risky migrations | **94.6%** (53 of 56) | |
 | False alarms on safe migrations | **15.6%** | 43.0% |
 
-Limits, method and data: [docs/MIGRATION_GUARD.md](https://github.com/OpenInterpretability/ekbasis/blob/v0.1.20/docs/MIGRATION_GUARD.md).
+Limits, method and data: [docs/MIGRATION_GUARD.md](https://github.com/OpenInterpretability/ekbasis/blob/v0.1.21/docs/MIGRATION_GUARD.md).
 A low probability is not proof of safety.
 
 ## Install in one minute
@@ -91,6 +91,7 @@ a required status check. The result also goes to the job summary and to the outp
 | `github-token` | `github.token` | writes the comment |
 | `verdict-cache` | `true` | reuses the answer for a migration already checked in this pull request (Actions cache, 30 days): no call, no tokens |
 | `setup-sql` | empty | SQL file run by the scratch admin before the base's migrations (a schema or role your platform creates outside migrations); read from the base branch |
+| `redis` | `auto` | django/alembic/rails: a throwaway Redis on the generator's isolated network, when the project's migrations need one |
 | `framework` | `sql` | `alembic`, or `django` (experimental): the framework renders the SQL; the pull request's code runs only in a container with no network and no secrets |
 | `on-code` | `warn` | django/alembic: a migration with code that is not SQL is listed for review by hand (`warn`) or fails the check (`block`) |
 | `image`, `setup`, `workdir`, `env`, `migrate-command`, `alembic-command` | | the framework generator; see the docs. Never put secrets in `env` |

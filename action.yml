@@ -41,7 +41,7 @@ inputs:
     description: Optional read-only replica URL, from a secret. Only planner statistics are read (row estimates, NULL fractions, distinct counts), never values.
     default: ""
   framework:
-    description: "sql (default: SQL migration files), django or alembic. For django and alembic the framework renders the SQL, running the pull request's code only inside a container with no network and no secrets."
+    description: "sql (default: SQL migration files), django, alembic or rails. For django, alembic and rails the framework renders the SQL, running the pull request's code only inside a container with no network and no secrets."
     default: sql
   image:
     description: Generator image for django/alembic (default python:3.12-slim).
@@ -67,6 +67,9 @@ inputs:
   setup-sql:
     description: "Path of a SQL file run before the base's migrations by the scratch server's admin (superuser) connection: schemas, roles or extensions your platform creates outside the migrations (e.g. Supabase's auth schema). :guard_role names the role the migrations run as. SECURITY: read from the BASE branch (git show <base>:<path>), never from the pull request, because it runs with privileges; a pull request that changes it takes effect only after it is merged."
     default: ""
+  redis:
+    description: "django/alembic/rails: a throwaway Redis on the generator's internal network (no route out, no published port), for projects whose migrations use it. auto (default: when the Gemfile or Python requirements depend on redis, sidekiq, celery...), on, or off."
+    default: auto
   postgres-image:
     description: The scratch PostgreSQL the schema is built in.
     default: postgres:16
@@ -91,8 +94,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.20
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@209353139a23aa3682bd83513415abb732dec338
+      # ekbasis v0.1.21
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@034a95dddb2f1886ef9f570dbba2d6f726e81f39
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
@@ -108,6 +111,7 @@ runs:
         github-token: ${{ inputs.github-token }}
         verdict-cache: ${{ inputs.verdict-cache }}
         setup-sql: ${{ inputs.setup-sql }}
+        redis: ${{ inputs.redis }}
         framework: ${{ inputs.framework }}
         image: ${{ inputs.image }}
         setup: ${{ inputs.setup }}
