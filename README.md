@@ -12,7 +12,7 @@ Pre-registered evaluation on **184 migrations the model never saw**:
 | Recall on risky migrations | **94.6%** (53 of 56) | |
 | False alarms on safe migrations | **15.6%** | 43.0% |
 
-Limits, method and data: [docs/MIGRATION_GUARD.md](https://github.com/OpenInterpretability/ekbasis/blob/v0.1.12/docs/MIGRATION_GUARD.md).
+Limits, method and data: [docs/MIGRATION_GUARD.md](https://github.com/OpenInterpretability/ekbasis/blob/v0.1.13/docs/MIGRATION_GUARD.md).
 A low probability is not proof of safety.
 
 ## Install in one minute
@@ -89,6 +89,7 @@ a required status check. The result also goes to the job summary and to the outp
 | `db-stats-url` | empty | read-only replica, from a secret; planner statistics only |
 | `postgres-image` | `postgres:16` | the scratch server |
 | `github-token` | `github.token` | writes the comment |
+| `verdict-cache` | `true` | reuses the answer for a migration already checked in this pull request (Actions cache, 30 days): no call, no tokens |
 
 ## Security
 

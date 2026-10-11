@@ -46,6 +46,11 @@ inputs:
   github-token:
     description: Token used to write the comment (needs pull-requests write).
     default: ${{ github.token }}
+  verdict-cache:
+    description: >-
+      true: reuse the model's answer for a migration already checked with the same file, base schema, client version,
+      transaction mode and statistics (30 days, in the Actions cache): no model call, no tokens. false: always ask.
+    default: "true"
 
 outputs:
   verdict:
@@ -59,8 +64,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.12
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@81f76d62e832481acccec3f68d39f7e8e3a9e3ad
+      # ekbasis v0.1.13
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@70be944bb81fcedca2e444cb875cbb9a51047af2
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
@@ -74,3 +79,4 @@ runs:
         db-stats-url: ${{ inputs.db-stats-url }}
         postgres-image: ${{ inputs.postgres-image }}
         github-token: ${{ inputs.github-token }}
+        verdict-cache: ${{ inputs.verdict-cache }}
