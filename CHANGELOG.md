@@ -3,6 +3,11 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.2.2] - 2026-10-11
+
+- Wraps ekbasis [v0.1.17](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.17) (`ec91a416e7a6234c13670befde01958cfae9550c`). No change to the
+  guard's behaviour.
+
 ## [1.2.1] - 2026-10-11
 
 - Wraps ekbasis [v0.1.16](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.16) (`bbcf44ce5d423d0e7244606d4919eeb6fe8c8761`).
