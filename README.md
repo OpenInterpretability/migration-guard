@@ -15,6 +15,35 @@ Pre-registered evaluation on **184 migrations the model never saw**:
 Limits, method and data: [docs/MIGRATION_GUARD.md](https://github.com/OpenInterpretability/ekbasis/blob/v0.1.12/docs/MIGRATION_GUARD.md).
 A low probability is not proof of safety.
 
+## Free for open source
+
+In a **public** repository you need no key and no secret: grant `id-token: write` and leave `api-key` out.
+
+```yaml
+name: migration guard
+on:
+  pull_request:                     # never pull_request_target
+    paths: ["**/migrations/**", "**/*.sql"]
+permissions:
+  contents: read
+  pull-requests: write              # the comment
+  id-token: write                   # the free tier: the repository's GitHub OIDC token instead of a key
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: OpenInterpretability/migration-guard@v1   # no api-key
+```
+
+The action requests the job's OIDC token for the audience `openinterp.org` (masked in the logs, valid a few minutes,
+requested only for the hosted API) and the API verifies GitHub's signature and that the repository is public.
+Repositories created at least 7 days ago qualify, for up to 2,000 migrations a month (200 a day) each. Past the quota,
+or on a fork's pull request (no OIDC token there), the verdict is "cannot foresee", as with no key. Private
+repositories use an API key.
+
 ## Install in one minute
 
 1. Get an API key at [openinterp.org/console](https://openinterp.org/console). Price: $0.30 per 1M input tokens;
@@ -78,7 +107,7 @@ a required status check. The result also goes to the job summary and to the outp
 
 | Input | Default | |
 |---|---|---|
-| `api-key` | required | Ekbasis API key, from a secret |
+| `api-key` | empty | Ekbasis API key, from a secret; empty in a public repository with `id-token: write` (free tier) |
 | `api-url` | `https://openinterp.org/api/v1` | the hosted API, or your own server |
 | `base-ref` | the PR's base | branch the PR merges into |
 | `paths` | Prisma, Diesel, `*.up.sql`, `*migrations/*.sql` | one fnmatch glob per line |
@@ -94,11 +123,12 @@ a required status check. The result also goes to the job summary and to the outp
 
 - **Trigger on `pull_request`, never on `pull_request_target`** with a checkout of the pull request's code. Under
   `pull_request_target`, untrusted code runs with your secrets and a write token.
-- **Forks get no secrets.** On a fork's pull request the key is empty, the verdict is "cannot foresee", and the
+- **Forks get no secrets** and no OIDC token. On a fork's pull request the key is empty, the verdict is "cannot foresee", and the
   comment step only warns (the fork's token is read-only); the result is still in the job summary. Choose one:
   - `fail-on: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'risky' || 'never' }}`
   - or run the job only for your own branches: `if: github.event.pull_request.head.repo.full_name == github.repository`
-- **Minimal permissions:** `contents: read` and `pull-requests: write`, nothing else.
+- **Minimal permissions:** `contents: read` and `pull-requests: write`, plus `id-token: write` for the free tier
+  (it lets the job prove which repository it runs in and grants no access to the repository), nothing else.
 - **The pull request's SQL is untrusted, and it runs**, but only in a throwaway PostgreSQL container on an internal
   Docker network (no route out, no published port), as a role made for the check that is not a superuser and cannot
   create databases or roles. `COPY ... PROGRAM`, `pg_read_file`, untrusted languages and the like fail with

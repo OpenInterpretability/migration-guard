@@ -11,8 +11,12 @@ branding:
 
 inputs:
   api-key:
-    description: Ekbasis API key (ekb_...). Pass it from a secret. A self-hosted server without keys accepts any value.
-    required: true
+    description: >-
+      Ekbasis API key (ekb_...), from a secret. Leave it empty in a public repository whose workflow grants
+      `id-token: write`: the repository's GitHub OIDC token is sent instead (free tier, no secret). A self-hosted
+      server without keys accepts any value.
+    required: false
+    default: ""
   api-url:
     description: Ekbasis server (default, the hosted API; or your own server with the open weights).
     default: https://openinterp.org/api/v1
@@ -59,8 +63,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.12
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@81f76d62e832481acccec3f68d39f7e8e3a9e3ad
+      # ekbasis oss-oidc (PR #15; repin to the release tag before tagging this action)
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@6d2a02f7bff9810c009f9d33dd6ec0cef5028340
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
