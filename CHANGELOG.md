@@ -3,6 +3,15 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.3.0] - 2026-10-11
+
+- Wraps ekbasis [v0.1.19](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.19) (`9caf2b222e048a1c5b4279ac643feb068029212a`).
+- The model now sees the part of the schema the migration reaches, cut by a parser: the tables it touches in full,
+  foreign-key neighbors in one line each, dependent views, triggers with their functions, sequences, enums and domains.
+  Pre-registered on 184 labelled migrations: accuracy 0.880 → 0.897 with replica statistics, unchanged without; fewer
+  false alarms; median input tokens −23% to −30%.
+- States up to 200,000 characters (~64k tokens) are read (was 60,000).
+
 ## [1.2.2] - 2026-10-11
 
 - Wraps ekbasis [v0.1.17](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.17) (`ec91a416e7a6234c13670befde01958cfae9550c`). No change to the
