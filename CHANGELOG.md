@@ -3,6 +3,12 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.2.1] - 2026-10-11
+
+- Wraps ekbasis [v0.1.16](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.16) (`bbcf44ce5d423d0e7244606d4919eeb6fe8c8761`).
+- Fixed: with `framework: django|alembic`, when the SQL could not be rendered at all, the check now says it cannot
+  foresee (and posts the comment) instead of stopping with an error.
+
 ## [1.2.0] - 2026-10-11
 
 - Wraps ekbasis [v0.1.15](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.15) (`fc02199c3ef00c922b808bfab57b515b4688b57f`).
