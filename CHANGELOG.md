@@ -3,6 +3,14 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.2.0] - 2026-10-11
+
+- Wraps ekbasis [v0.1.15](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.15) (`fc02199c3ef00c922b808bfab57b515b4688b57f`).
+- New input `framework` (`sql` by default, `alembic`, or `django`, experimental): the framework renders the SQL, running
+  the pull request's code only inside a container with no network and no secrets. Migrations with code that is not SQL
+  are listed for review by hand (`on-code: warn`, default) or fail the check (`on-code: block`). Also `image`, `setup`,
+  `workdir`, `env`, `migrate-command`, `alembic-command`.
+
 ## [1.1.1] - 2026-10-11
 
 - Wraps ekbasis [v0.1.14](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.14) (`ed600036ae7823eb7b7aef438818e649d572bbe1`).

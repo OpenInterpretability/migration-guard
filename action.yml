@@ -40,6 +40,30 @@ inputs:
   db-stats-url:
     description: Optional read-only replica URL, from a secret. Only planner statistics are read (row estimates, NULL fractions, distinct counts), never values.
     default: ""
+  framework:
+    description: "sql (default: SQL migration files), django or alembic. For django and alembic the framework renders the SQL, running the pull request's code only inside a container with no network and no secrets."
+    default: sql
+  image:
+    description: Generator image for django/alembic (default python:3.12-slim).
+    default: ""
+  setup:
+    description: "Shell command run in the generator, in the head tree, WITH network, before the network is cut (e.g. pip install -r requirements.txt)."
+    default: ""
+  workdir:
+    description: Where manage.py or alembic.ini is, inside the repository.
+    default: "."
+  env:
+    description: "K=V lines for the generator (${EKBASIS_DB_URL} becomes the scratch database's URL). Never put secrets here: the pull request's code reads them."
+    default: ""
+  migrate-command:
+    description: The command that migrates the base (default per framework).
+    default: ""
+  alembic-command:
+    description: alembic (default) or flask db.
+    default: ""
+  on-code:
+    description: "django/alembic: a migration with code that is not SQL (RunPython, no offline SQL) is listed as 'code not foreseen, review by hand' and does not fail the check (warn, default), or fails closed (block)."
+    default: warn
   postgres-image:
     description: The scratch PostgreSQL the schema is built in.
     default: postgres:16
@@ -64,8 +88,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.14
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@ed600036ae7823eb7b7aef438818e649d572bbe1
+      # ekbasis v0.1.15
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@fc02199c3ef00c922b808bfab57b515b4688b57f
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
@@ -80,3 +104,11 @@ runs:
         postgres-image: ${{ inputs.postgres-image }}
         github-token: ${{ inputs.github-token }}
         verdict-cache: ${{ inputs.verdict-cache }}
+        framework: ${{ inputs.framework }}
+        image: ${{ inputs.image }}
+        setup: ${{ inputs.setup }}
+        workdir: ${{ inputs.workdir }}
+        env: ${{ inputs.env }}
+        migrate-command: ${{ inputs.migrate-command }}
+        alembic-command: ${{ inputs.alembic-command }}
+        on-code: ${{ inputs.on-code }}
