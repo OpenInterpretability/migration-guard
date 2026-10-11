@@ -7,5 +7,5 @@ Each release pins one release of [ekbasis](https://github.com/OpenInterpretabili
 
 - First release on its own repository, for the GitHub Marketplace.
 - Wraps `OpenInterpretability/ekbasis/actions/migration-guard` at ekbasis
-  [v0.1.12](https://github.com/OpenInterpretability/ekbasis/releases/tag/v0.1.12)
+  [v0.1.12](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.12)
   (`81f76d62e832481acccec3f68d39f7e8e3a9e3ad`), with the same inputs and outputs.
