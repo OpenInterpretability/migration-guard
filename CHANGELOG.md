@@ -3,6 +3,12 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.1.1] - 2026-10-11
+
+- Wraps ekbasis [v0.1.14](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.14) (`ed600036ae7823eb7b7aef438818e649d572bbe1`).
+- Fixed: a `BEGIN` inside a function body no longer switches a file to autocommit rules; goose files run only their
+  Up sections, and `-- +goose NO TRANSACTION` is read as autocommit.
+
 ## [1.1.0] - 2026-10-11
 
 - Wraps ekbasis [v0.1.13](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.13) (`70be944bb81fcedca2e444cb875cbb9a51047af2`).

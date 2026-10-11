@@ -64,8 +64,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.13
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@70be944bb81fcedca2e444cb875cbb9a51047af2
+      # ekbasis v0.1.14
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@ed600036ae7823eb7b7aef438818e649d572bbe1
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
