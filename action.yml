@@ -70,6 +70,12 @@ inputs:
   redis:
     description: "django/alembic/rails: a throwaway Redis on the generator's internal network (no route out, no published port), for projects whose migrations use it. auto (default: when the Gemfile or Python requirements depend on redis, sidekiq, celery...), on, or off."
     default: auto
+  policy:
+    description: >-
+      rule (default): a rule written from the PostgreSQL documentation, over the same facts the model reads, decides
+      whether the check fails; when it finds nothing and the model's second opinion does, the migration is marked
+      "review" (in the comment and the JSON) without failing the check. model: the model decides (the 0.1.21 behavior).
+    default: rule
   postgres-image:
     description: The scratch PostgreSQL the schema is built in.
     default: postgres:16
@@ -84,7 +90,7 @@ inputs:
 
 outputs:
   verdict:
-    description: ok, risky or cannot-foresee.
+    description: ok, risky, cannot-foresee, code-not-foreseen (a migration with code to review by hand), or review (the rule found no risk, the model's second opinion asks for a review). The last two do not fail the check.
     value: ${{ steps.guard.outputs.verdict }}
   result:
     description: Path of the JSON result.
@@ -94,8 +100,8 @@ runs:
   using: composite
   steps:
     - id: guard
-      # ekbasis v0.1.21
-      uses: OpenInterpretability/ekbasis/actions/migration-guard@034a95dddb2f1886ef9f570dbba2d6f726e81f39
+      # ekbasis v0.1.22
+      uses: OpenInterpretability/ekbasis/actions/migration-guard@f71c989fecd93fb3f2e73f1568922e7b01c3fc52
       with:
         api-key: ${{ inputs.api-key }}
         api-url: ${{ inputs.api-url }}
@@ -112,6 +118,7 @@ runs:
         verdict-cache: ${{ inputs.verdict-cache }}
         setup-sql: ${{ inputs.setup-sql }}
         redis: ${{ inputs.redis }}
+        policy: ${{ inputs.policy }}
         framework: ${{ inputs.framework }}
         image: ${{ inputs.image }}
         setup: ${{ inputs.setup }}

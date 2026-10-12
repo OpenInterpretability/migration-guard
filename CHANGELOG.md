@@ -3,6 +3,13 @@
 Each release pins one release of [ekbasis](https://github.com/OpenInterpretability/ekbasis) by commit SHA.
 `@v1` follows the latest 1.x; pin a full tag (`@v1.0.0`) or this repository's commit SHA if you prefer.
 
+## [1.6.0] - 2026-10-12
+
+- Wraps ekbasis [v0.1.22](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.22) (`f71c989fecd93fb3f2e73f1568922e7b01c3fc52`).
+- New input `policy` (`rule` by default, or `model`). With `rule`, a rule written from the PostgreSQL documentation
+  decides whether the check fails, over the same facts the model reads; when it finds nothing and the model does, the
+  migration is marked `review` without failing the check. New output value `verdict: review`.
+
 ## [1.5.0] - 2026-10-11
 
 - Wraps ekbasis [v0.1.21](https://github.com/OpenInterpretability/ekbasis/tree/v0.1.21) (`034a95dddb2f1886ef9f570dbba2d6f726e81f39`).
